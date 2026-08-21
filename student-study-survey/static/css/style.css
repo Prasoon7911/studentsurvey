@@ -1,0 +1,189 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  --primary: #4f46e5;
+  --primary-light: #818cf8;
+  --primary-dark: #3730a3;
+  --accent: #06b6d4;
+  --bg-gradient: linear-gradient(135deg, #f0f4ff 0%, #e0e7ff 50%, #fdf2f8 100%);
+}
+
+* {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--bg-gradient);
+  min-height: 100vh;
+  color: #1e293b;
+  overflow-x: hidden;
+}
+
+/* Glassmorphism effects */
+.glass-card {
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  box-shadow: 0 20px 40px -15px rgba(79, 70, 229, 0.12), 0 0 1px 1px rgba(255, 255, 255, 0.9);
+}
+
+.glass-pill {
+  background: rgba(243, 244, 246, 0.75);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(229, 231, 235, 0.8);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-pill:hover {
+  background: rgba(238, 242, 255, 0.95);
+  border-color: #818cf8;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.1);
+}
+
+/* Selected option chip state */
+.option-chip input[type="radio"]:checked + label,
+.option-chip input[type="checkbox"]:checked + label {
+  background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
+  color: white;
+  border-color: #4338ca;
+  box-shadow: 0 8px 16px -4px rgba(79, 70, 229, 0.35);
+  transform: translateY(-2px) scale(1.02);
+}
+
+.option-chip input[type="radio"]:checked + label .chip-icon,
+.option-chip input[type="checkbox"]:checked + label .chip-icon {
+  background: rgba(255, 255, 255, 0.25);
+  color: white;
+}
+
+/* Subtle background glowing orbs */
+.bg-orb {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(80px);
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.45;
+  animation: floatOrb 12s ease-in-out infinite alternate;
+}
+
+.bg-orb-1 {
+  top: -10%;
+  left: -5%;
+  width: 450px;
+  height: 450px;
+  background: radial-gradient(circle, #818cf8 0%, #c084fc 100%);
+}
+
+.bg-orb-2 {
+  bottom: -10%;
+  right: -5%;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, #38bdf8 0%, #818cf8 100%);
+  animation-delay: -6s;
+}
+
+@keyframes floatOrb {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(40px, 30px) scale(1.08); }
+}
+
+/* Smooth step transitions */
+.step-slide {
+  display: none;
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+.step-slide.active {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Modern inputs */
+.custom-input {
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 1rem;
+  padding: 0.85rem 1.25rem;
+  transition: all 0.2s ease;
+  font-size: 0.975rem;
+  color: #1e293b;
+  width: 100%;
+}
+
+.custom-input:focus {
+  outline: none;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
+  background: #ffffff;
+}
+
+.custom-textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+/* Quick tag badges */
+.tag-badge {
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  background: #f1f5f9;
+  color: #475569;
+  border: 1px solid #e2e8f0;
+  transition: all 0.2s ease;
+}
+
+.tag-badge:hover {
+  background: #ede9fe;
+  color: #5b21b6;
+  border-color: #ddd6fe;
+  transform: scale(1.03);
+}
+
+/* Progress bar glowing indicator */
+.progress-glow {
+  box-shadow: 0 0 12px rgba(99, 102, 241, 0.6);
+}
+
+/* Confetti canvas */
+#confetti-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 100;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}

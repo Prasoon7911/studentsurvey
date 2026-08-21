@@ -1,0 +1,33 @@
+[
+  {
+    "id": "0bd44625",
+    "timestamp": "2026-08-21 20:14:48",
+    "student_name": "Rohan Verma",
+    "student_email": "rohan.verma@example.com",
+    "q1_class": "Above",
+    "q1_class_other": "1st Year B.Tech CSE",
+    "q2_difficult_subjects": [
+      "Mathematics",
+      "Physics",
+      "Other"
+    ],
+    "q2_subject_other": "Data Structures",
+    "q2_why_difficult": "Calculus theorems and complex algorithm proofs are difficult to visualize.",
+    "q3_biggest_study_problem": "Procrastination and getting distracted by smartphone notifications.",
+    "q4_when_dont_understand": [
+      "Watch YouTube",
+      "Search on Google/AI",
+      "Something else"
+    ],
+    "q4_other_action": "Solve examples from reference textbook",
+    "q5_how_know_weak_topics": "When I struggle to solve problem sets or score low in midterms.",
+    "q6_understand_low_marks": "Sometimes",
+    "q6_other_explanation": "",
+    "q7_teacher_specific_feedback": "Professor explains common mistakes in class, but individual feedback is limited.",
+    "q8_differentiated_homework": "Everyone gets the same problem sheet, but optional challenging questions are given.",
+    "q9_one_month_before_exam": "Make revision formula sheets, solve past 5 years question papers, and attend group study.",
+    "q10_teacher_improvement_wishlist": "Provide more animated visual demos and hold dedicated doubt clearing hours.",
+    "q11_ai_diagnostic_app_interest": "Definitely Yes!",
+    "q11_why_interest": "It would pinpoint my exact weak sub-topics so I do not waste time revising things I already know."
+  }
+]
