@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Learning & Study Insights Survey</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Canvas Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body class="relative flex flex-col min-h-screen justify-between items-center p-4 md:p-8">
+
+  <!-- Background Decorative Glowing Elements -->
+  <div class="bg-orb bg-orb-1"></div>
+  <div class="bg-orb bg-orb-2"></div>
+  <canvas id="confetti-canvas"></canvas>
+
+  <!-- Top Navigation / Branding Header -->
+  <header class="w-full max-w-3xl flex justify-between items-center py-3 px-6 mb-6 rounded-2xl glass-card z-10">
+    <div class="flex items-center space-x-3">
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center text-white shadow-md shadow-indigo-200">
+        <i class="fa-solid fa-graduation-cap text-lg"></i>
+      </div>
+      <div>
+        <h1 class="font-bold text-gray-900 text-lg leading-tight">Student Study Survey</h1>
+        <p class="text-xs text-indigo-600 font-medium tracking-wide">UX Learning Research</p>
+      </div>
+    </div>
+    <div class="hidden sm:flex items-center gap-2 text-xs font-semibold text-emerald-700 bg-emerald-50 px-3 py-1.5 rounded-full border border-emerald-200">
+      <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+      Confidential & Safe
+    </div>
+  </header>
+
+  <!-- Main Survey Container -->
+  <main class="w-full max-w-3xl z-10 flex-grow flex flex-col justify-center">
+
+    <!-- Reassurance Banner -->
+    <div class="mb-6 p-4 md:p-5 rounded-2xl bg-gradient-to-r from-indigo-500/10 via-purple-500/10 to-pink-500/10 border border-indigo-200/60 backdrop-blur-md shadow-sm">
+      <div class="flex items-start gap-3.5">
+        <div class="text-indigo-600 text-xl mt-0.5">
+          <i class="fa-solid fa-quote-left"></i>
+        </div>
+        <div>
+          <p class="text-sm md:text-base font-semibold text-indigo-950 leading-snug">
+            “There are no right or wrong answers. We just want to understand how you study and what problems you face.”
+          </p>
+          <p class="text-xs text-gray-500 mt-1">
+            Be 100% honest — your feedback directly helps build better learning systems!
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN FORM CONTAINER -->
+    <div class="glass-card rounded-3xl p-6 md:p-10 shadow-2xl relative overflow-hidden transition-all duration-300">
+
+      <!-- SCREEN 0: LOGIN / ONBOARDING -->
+      <section id="step-login" class="step-slide active">
+        <div class="text-center max-w-md mx-auto mb-8">
+          <span class="inline-block p-3 bg-indigo-50 text-indigo-600 rounded-2xl mb-3 text-2xl shadow-inner">
+            👋
+          </span>
+          <h2 class="text-2xl md:text-3xl font-extrabold text-gray-900 tracking-tight">
+            Welcome to the Survey!
+          </h2>
+          <p class="text-sm text-gray-600 mt-2">
+            Please enter your name and email to begin. Your details are strictly confidential and will never be shown publicly.
+          </p>
+        </div>
+
+        <form id="login-form" onsubmit="handleLoginSubmit(event)" class="max-w-md mx-auto space-y-5">
+          <div>
+            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2" for="student-name">
+              Your Full Name <span class="text-rose-500">*</span>
+            </label>
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400">
+                <i class="fa-regular fa-user"></i>
+              </div>
+              <input 
+                type="text" 
+                id="student-name" 
+                name="student_name" 
+                required 
+                placeholder="e.g. Alex Sharma" 
+                class="custom-input pl-11"
+              >
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2" for="student-email">
+              Your Email Address <span class="text-rose-500">*</span>
+            </label>
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400">
+                <i class="fa-regular fa-envelope"></i>
+              </div>
+              <input 
+                type="email" 
+                id="student-email" 
+                name="student_email" 
+                required 
+                placeholder="e.g. alex@example.com" 
+                class="custom-input pl-11"
+              >
+            </div>
+          </div>
+
+          <div class="pt-3">
+            <button 
+              type="submit" 
+              class="w-full py-4 px-6 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 text-white font-bold rounded-2xl shadow-lg shadow-indigo-200 hover:shadow-indigo-300 transition-all transform hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2 text-base"
+            >
+              Start Survey
+              <i class="fa-solid fa-arrow-right text-sm"></i>
+            </button>
+          </div>
+
+          <p class="text-center text-xs text-gray-400 mt-4 flex items-center justify-center gap-1.5">
+            <i class="fa-solid fa-lock text-[10px]"></i>
+            Takes ~3-4 minutes to complete
+          </p>
+        </form>
+      </section>
+
+      <!-- SURVEY WIZARD PROGRESS BAR (Visible during questions) -->
+      <div id="survey-progress-wrapper" class="hidden mb-8">
+        <div class="flex justify-between items-center text-xs font-bold text-gray-500 mb-2">
+          <span id="question-counter" class="text-indigo-600">Question 1 of 11</span>
+          <span id="progress-percent">9% Complete</span>
+        </div>
+        <div class="w-full bg-gray-100 rounded-full h-2.5 overflow-hidden">
+          <div id="progress-bar-fill" class="bg-gradient-to-r from-indigo-600 via-purple-500 to-indigo-500 h-2.5 rounded-full transition-all duration-300 w-[9%] progress-glow"></div>
+        </div>
+      </div>
+
+      <!-- QUESTION CONTAINER -->
+      <form id="survey-form" onsubmit="handleSurveySubmit(event)">
+
+        <!-- QUESTION 1: Class -->
+        <section id="step-q1" class="step-slide">
+          <div class="mb-6">
+            <span class="text-xs font-bold uppercase tracking-wider text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-md">Question 1</span>
+            <h2 class="text-xl md:text-2xl font-bold text-gray-900 mt-2">
+              What class are you in? <span class="text-rose-500">*</span>
+            </h2>
+            <p class="text-sm text-gray-500 mt-1">Select your current class or education level.</p>
+          </div>
+
+          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 mb-4">
+            <div class="option-chip">
+              <input type="radio" id="class-1" name="q1_class" value="Class 1" class="hidden" onchange="toggleQ1Other(false)">
+              <label for="class-1" class="glass-pill flex items-center justify-center p-3.5 rounded-xl cursor-pointer font-semibold text-sm text-center">Class 1</label>
+            </div>
+            <div class="option-chip">
+              <input type="radio" id="class-2" name="q1_class" value="Class 2" class="hidden" onchange="toggleQ1Other(false)">
+              <label for="class-2" class="glass-pill flex items-center justify-center p-3.5 rounded-xl cursor-pointer font-semibold text-sm text-center">Class 2</label>
+            </div>
+            <div class="option-chip">
+              <input type="radio" id="class-3" name="q1_class" value="Class 3" class="hidden" onchange="toggleQ1Other(false)">
+              <label for="class-3" class="glass-pill flex items-center justify-center p-3.5 rounded-xl cursor-pointer font-semibold text-sm text-center">Class 3</label>
+            </div>
+            <div class="option-chip">
+              <input type="radio" id="class-4" name="q1_class" value="Class 4" class="hidden" onchange="toggleQ1Other(false)">
+              <label for="class-4" class="glass-pill flex items-center justify-center p-3.5 rounded-xl cursor-pointer font-semibold text-sm text-center">Class 4</label>
+            </div>
+            <div class="option-chip">
+              <input type="radio" id="class-5" name="q1_class" value="Class 5" class="hidden" onchange="toggleQ1Other(false)">
+              <label for="class-5" class="glass-pill flex items-center justify-center p-3.5 rounded-xl cursor-pointer font-semibold text-sm text-center">Class 5</label>
+            </div>
+            <div class="option-chip">
+              <input type="radio" id="class-6" name="q1_class" value="Class 6" class="hidden" onchange="toggleQ1Other(false)">
+              <label for="class-6" class="glass-pill flex items-center justify-center p-3.5 rounded-xl cursor-pointer font-semibold text-sm text-center">Class 6</label>
+            </div>
+            <div class="option-chip">
+              <input type="radio" id="class-7" name="q1_class" value="Class 7" class="hidden" onchange="toggleQ1Other(false)">
+              <label for="class-7" class="glass-pill flex items-center justify-center p-3.5 rounded-xl cursor-pointer font-semibold text-sm text-center">Class 7</label>
+            </div>
+            <div class="option-chip">
+              <input type="radio" id="class-8" name="q1_class" value="Class 8" class="hidden" onchange="toggleQ1Other(false)">
+              <label for="class-8" class="glass-pill flex items-center justify-center p-3.5 rounded-xl cursor-pointer font-semibold text-sm text-center">Class 8</label>
+            </div>
+            <div class="option-chip">
+              <input type="radio" id="class-9" name="q1_class" value="Class 9" class="hidden" onchange="toggleQ1Other(false)">
+              <label for="class-9" class="glass-pill flex items-center justify-center p-3.5 rounded-xl cursor-pointer font-semibold text-sm text-center">Class 9</label>
+            </div>
+            <div class="option-chip">
+              <input type="radio" id="class-10" name="q1_class" value="Class 10" class="hidden" onchange="toggleQ1Other(false)">
+              <label for="class-10" class="glass-pill flex items-center justify-center p-3.5 rounded-xl cursor-pointer font-semibold text-sm text-center">Class 10</label>
+            </div>
+            <div class="option-chip">
+              <input type="radio" id="class-11" name="q1_class" value="Class 11" class="hidden" onchange="toggleQ1Other(false)">
+              <label for="class-11" class="glass-pill flex items-center justify-center p-3.5 rounded-xl cursor-pointer font-semibold text-sm text-center">Class 11</label>
+            </div>
+            <div class="option-chip">
+              <input type="radio" id="class-12" name="q1_class" value="Class 12" class="hidden" onchange="toggleQ1Other(false)">
+              <label for="class-12" class="glass-pill flex items-center justify-center p-3.5 rounded-xl cursor-pointer font-semibold text-sm text-center">Class 12</label>
+            </div>
+          </div>
+
+          <!-- Above Option -->
+          <div class="option-chip mb-4">
+            <input type="radio" id="class-above" name="q1_class" value="Above" class="hidden" onchange="toggleQ1Other(true)">
+            <label for="class-above" class="glass-pill flex items-center justify-between p-4 rounded-xl cursor-pointer font-semibold text-sm border-2 border-dashed border-indigo-300">
+              <span class="flex items-center gap-2">
+                <i class="fa-solid fa-graduation-cap text-indigo-500"></i>
+                Above Class 12 / College / Higher Studies
+              </span>
+              <i class="fa-solid fa-chevron-right text-xs text-gray-400"></i>
+            </label>
+          </div>
+
+          <!-- Dynamic Text Box for Above -->
+          <div id="q1-other-box" class="hidden mt-3 p-4 rounded-2xl bg-indigo-50/70 border border-indigo-200">
+            <label class="block text-xs font-bold text-indigo-900 uppercase tracking-wider mb-2" for="q1_class_other">
+              Please specify your class / course / year <span class="text-rose-500">*</span>
+            </label>
+            <input 
+              type="text" 
+              id="q1_class_other" 
+              name="q1_class_other" 
+              placeholder="e.g. B.Tech 1st Year, BCA, Diploma, NEET/JEE Dropper, etc." 
+              class="custom-input"
+            >
+          </div>
+        </section>
+
+        <!-- QUESTION 2: Difficult Subject & Why -->
+        <section id="step-q2" class="step-slide">
+          <div class="mb-6">
+            <span class="text-xs font-bold uppercase tracking-wider text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-md">Question 2</span>
+            <h2 class="text-xl md:text-2xl font-bold text-gray-900 mt-2">
+              Which subject do you find most difficult? Why? <span class="text-rose-500">*</span>
+            </h2>
+            <p class="text-sm text-gray-500 mt-1">Tick the subject(s) you struggle with and tell us why.</p>
+          </div>
+
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-4">
+            <div class="option-chip">
+              <input type="checkbox" id="subj-maths" name="q2_difficult_subjects" value="Mathematics" class="hidden">
+              <label for="subj-maths" class="glass-pill flex items-center p-3 rounded-xl cursor-pointer font-medium text-sm gap-2">
+                <span>📐</span> Mathematics
+              </label>
+            </div>
+            <div class="option-chip">
+              <input type="checkbox" id="subj-physics" name="q2_difficult_subjects" value="Physics" class="hidden">
+              <label for="subj-physics" class="glass-pill flex items-center p-3 rounded-xl cursor-pointer font-medium text-sm gap-2">
+                <span>⚡</span> Physics
+              </label>
+            </div>
+            <div class="option-chip">
+              <input type="checkbox" id="subj-chemistry" name="q2_difficult_subjects" value="Chemistry" class="hidden">
+              <label for="subj-chemistry" class="glass-pill flex items-center p-3 rounded-xl cursor-pointer font-medium text-sm gap-2">
+                <span>🧪</span> Chemistry
+              </label>
+            </div>
+            <div class="option-chip">
+              <input type="checkbox" id="subj-biology" name="q2_difficult_subjects" value="Biology" class="hidden">
+              <label for="subj-biology" class="glass-pill flex items-center p-3 rounded-xl cursor-pointer font-medium text-sm gap-2">
+                <span>🧬</span> Biology
+              </label>
+            </div>
+            <div class="option-chip">
+              <input type="checkbox" id="subj-science" name="q2_difficult_subjects" value="General Science" class="hidden">
+              <label for="subj-science" class="glass-pill flex items-center p-3 rounded-xl cursor-pointer font-medium text-sm gap-2">
+                <span>🔬</span> General Science
+              </label>
+            </div>
+            <div class="option-chip">
+              <input type="checkbox" id="subj-english" name="q2_difficult_subjects" value="English" class="hidden">
+              <label for="subj-english" class="glass-pill flex items-center p-3 rounded-xl cursor-pointer font-medium text-sm gap-2">
+                <span>📖</span> English
+              </label>
+            </div>
+            <div class="option-chip">
+              <input type="checkbox" id="subj-sst" name="q2_difficult_subjects" value="Social Science / History / Geo" class="hidden">
+              <label for="subj-sst" class="glass-pill flex items-center p-3 rounded-xl cursor-pointer font-medium text-sm gap-2">
+                <span>🌍</span> Social Science
+              </label>
+            </div>
+            <div class="option-chip">
+              <input type="checkbox" id="subj-cs" name="q2_difficult_subjects" value="Computer Science / IT" class="hidden">
+              <label for="subj-cs" class="glass-pill flex items-center p-3 rounded-xl cursor-pointer font-medium text-sm gap-2">
+                <span>💻</span> Computer / IT
+              </label>
+            </div>
+            <div class="option-chip">
+              <input type="checkbox" id="subj-commerce" name="q2_difficult_subjects" value="Commerce / Accounts / Economics" class="hidden">
+              <label for="subj-commerce" class="glass-pill flex items-center p-3 rounded-xl cursor-pointer font-medium text-sm gap-2">
+                <span>📊</span> Accounts / Eco
+              </label>
+            </div>
+            <div class="option-chip">
+              <input type="checkbox" id="subj-hindi" name="q2_difficult_subjects" value="Hindi / Regional Language" class="hidden">
+              <label for="subj-hindi" class="glass-pill flex items-center p-3 rounded-xl cursor-pointer font-medium text-sm gap-2">
+                <span>✍️</span> Hindi / Lang
+              </label>
+            </div>
+            <div class="option-chip col-span-2 sm:col-span-1">
+              <input type="checkbox" id="subj-other" name="q2_difficult_subjects" value="Other" class="hidden" onchange="toggleQ2Other(this.checked)">
+              <label for="subj-other" class="glass-pill flex items-center p-3 rounded-xl cursor-pointer font-medium text-sm gap-2 border-indigo-200">
+                <span>✨</span> Other Subject
+              </label>
+            </div>
+          </div>
+
+          <!-- Dynamic Text Box for Other Subject -->
+          <div id="q2-other-box" class="hidden mb-4 p-4 rounded-2xl bg-indigo-50/70 border border-indigo-200">
+            <label class="block text-xs font-bold text-indigo-900 uppercase tracking-wider mb-2" for="q2_subject_other">
+              Please specify the other subject name <span class="text-rose-500">*</span>
+            </label>
+            <input 
+              type="text" 
+              id="q2_subject_other" 
+              name="q2_subject_other" 
+              placeholder="e.g. Accountancy, Statistics, Sanskrit, Economics, etc." 
+              class="custom-input"
+            >
+          </div>
+
+          <!-- Why is it difficult? -->
+          <div class="mt-4">
+            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2" for="q2_why_difficult">
+              Why do you find this subject difficult? <span class="text-rose-500">*</span>
+            </label>
+            <textarea 
+              id="q2_why_difficult" 
+              name="q2_why_difficult" 
+              rows="3" 
+              placeholder="e.g. Too many formulas to memorize, concepts aren't clear in class, lack of step-by-step examples, question papers are very tricky..."
+              class="custom-input custom-textarea"
+            ></textarea>
+          </div>
+        </section>
+
+        <!-- QUESTION 3: Biggest Problem While Studying -->
+        <section id="step-q3" class="step-slide">
+          <div class="mb-6">
+            <span class="text-xs font-bold uppercase tracking-wider text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-md">Question 3</span>
+            <h2 class="text-xl md:text-2xl font-bold text-gray-900 mt-2">
+              What is the biggest problem you face while studying? <span class="text-rose-500">*</span>
+            </h2>
+            <p class="text-sm text-gray-500 mt-1">What stops you or makes studying stressful or hard to maintain?</p>
+          </div>
+
+          <!-- Thought Starters / Tag Inspiration -->
+          <div class="mb-3">
+            <p class="text-xs font-semibold text-gray-500 mb-2">💡 Tap to inspire your answer:</p>
+            <div class="flex flex-wrap gap-2">
+              <button type="button" class="tag-badge" onclick="appendPrompt('q3_biggest_study_problem', 'Phone & Social Media distractions')">📱 Phone Distractions</button>
+              <button type="button" class="tag-badge" onclick="appendPrompt('q3_biggest_study_problem', 'Procrastination and delaying study time')">⏳ Procrastination</button>
+              <button type="button" class="tag-badge" onclick="appendPrompt('q3_biggest_study_problem', 'Too much syllabus and fear of exams')">📚 Overwhelming Syllabus</button>
+              <button type="button" class="tag-badge" onclick="appendPrompt('q3_biggest_study_problem', 'Hard to understand complex concepts on my own')">🧩 Complex Concepts</button>
+              <button type="button" class="tag-badge" onclick="appendPrompt('q3_biggest_study_problem', 'Lack of motivation and feeling tired/sleepy')">🥱 Sleepy / Low Energy</button>
+            </div>
+          </div>
+
+          <div>
+            <textarea 
+              id="q3_biggest_study_problem" 
+              name="q3_biggest_study_problem" 
+              rows="4" 
+              placeholder="Describe what challenges you face the most while sitting down to study..."
+              class="custom-input custom-textarea"
+            ></textarea>
+          </div>
+        </section>
+
+        <!-- QUESTION 4: When you don’t understand a topic -->
+        <section id="step-q4" class="step-slide">
+          <div class="mb-6">
+            <span class="text-xs font-bold uppercase tracking-wider text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-md">Question 4</span>
+            <h2 class="text-xl md:text-2xl font-bold text-gray-900 mt-2">
+              When you don’t understand a topic, what do you usually do? <span class="text-rose-500">*</span>
+            </h2>
+            <p class="text-sm text-gray-500 mt-1">Tick all the actions you usually take when stuck on a doubt.</p>
+          </div>
+
+          <div class="space-y-3 mb-4">
+            <div class="option-chip">
+              <input type="checkbox" id="q4-opt1" name="q4_when_dont_understand" value="Ask teacher" class="hidden">
+              <label for="q4-opt1" class="glass-pill flex items-center p-3.5 rounded-xl cursor-pointer font-medium text-sm gap-3">
+                <span class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center chip-icon"><i class="fa-solid fa-chalkboard-user"></i></span>
+                Ask teacher
+              </label>
+            </div>
+
+            <div class="option-chip">
+              <input type="checkbox" id="q4-opt2" name="q4_when_dont_understand" value="Ask parents/friends" class="hidden">
+              <label for="q4-opt2" class="glass-pill flex items-center p-3.5 rounded-xl cursor-pointer font-medium text-sm gap-3">
+                <span class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center chip-icon"><i class="fa-solid fa-user-group"></i></span>
+                Ask parents / friends
+              </label>
+            </div>
+
+            <div class="option-chip">
+              <input type="checkbox" id="q4-opt3" name="q4_when_dont_understand" value="Watch YouTube" class="hidden">
+              <label for="q4-opt3" class="glass-pill flex items-center p-3.5 rounded-xl cursor-pointer font-medium text-sm gap-3">
+                <span class="w-8 h-8 rounded-lg bg-rose-100 text-rose-700 flex items-center justify-center chip-icon"><i class="fa-brands fa-youtube"></i></span>
+                Watch YouTube
+              </label>
+            </div>
+
+            <div class="option-chip">
+              <input type="checkbox" id="q4-opt4" name="q4_when_dont_understand" value="Search on Google/AI" class="hidden">
+              <label for="q4-opt4" class="glass-pill flex items-center p-3.5 rounded-xl cursor-pointer font-medium text-sm gap-3">
+                <span class="w-8 h-8 rounded-lg bg-sky-100 text-sky-700 flex items-center justify-center chip-icon"><i class="fa-solid fa-robot"></i></span>
+                Search on Google / AI
+              </label>
+            </div>
+
+            <div class="option-chip">
+              <input type="checkbox" id="q4-opt5" name="q4_when_dont_understand" value="Leave it and move on" class="hidden">
+              <label for="q4-opt5" class="glass-pill flex items-center p-3.5 rounded-xl cursor-pointer font-medium text-sm gap-3">
+                <span class="w-8 h-8 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center chip-icon"><i class="fa-solid fa-forward"></i></span>
+                Leave it and move on
+              </label>
+            </div>
+
+            <div class="option-chip">
+              <input type="checkbox" id="q4-opt6" name="q4_when_dont_understand" value="Something else" class="hidden" onchange="toggleQ4Other(this.checked)">
+              <label for="q4-opt6" class="glass-pill flex items-center p-3.5 rounded-xl cursor-pointer font-medium text-sm gap-3 border-indigo-200">
+                <span class="w-8 h-8 rounded-lg bg-purple-100 text-purple-700 flex items-center justify-center chip-icon"><i class="fa-solid fa-ellipsis"></i></span>
+                Something else
+              </label>
+            </div>
+          </div>
+
+          <!-- Dynamic Text Box for Something Else -->
+          <div id="q4-other-box" class="hidden p-4 rounded-2xl bg-indigo-50/70 border border-indigo-200">
+            <label class="block text-xs font-bold text-indigo-900 uppercase tracking-wider mb-2" for="q4_other_action">
+              Please tell us what else you do <span class="text-rose-500">*</span>
+            </label>
+            <input 
+              type="text" 
+              id="q4_other_action" 
+              name="q4_other_action" 
+              placeholder="e.g. Go to private tuition, solve textbook examples, ask in online Discord group..." 
+              class="custom-input"
+            >
+          </div>
+        </section>
+
+        <!-- QUESTION 5: How do you know which topics you are weak in? -->
+        <section id="step-q5" class="step-slide">
+          <div class="mb-6">
+            <span class="text-xs font-bold uppercase tracking-wider text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-md">Question 5</span>
+            <h2 class="text-xl md:text-2xl font-bold text-gray-900 mt-2">
+              How do you know which topics you are weak in? <span class="text-rose-500">*</span>
+            </h2>
+            <p class="text-sm text-gray-500 mt-1">How do you figure out where you need more practice?</p>
+          </div>
+
+          <!-- Thought Starters -->
+          <div class="mb-3">
+            <p class="text-xs font-semibold text-gray-500 mb-2">💡 Common ways students identify weaknesses:</p>
+            <div class="flex flex-wrap gap-2">
+              <button type="button" class="tag-badge" onclick="appendPrompt('q5_how_know_weak_topics', 'When I score low in class tests or unit tests')">📝 Low test scores</button>
+              <button type="button" class="tag-badge" onclick="appendPrompt('q5_how_know_weak_topics', 'When I cannot solve practice questions on my own')">❌ Can\'t solve practice problems</button>
+              <button type="button" class="tag-badge" onclick="appendPrompt('q5_how_know_weak_topics', 'When teacher points it out in class')">👩‍🏫 Teacher feedback</button>
+              <button type="button" class="tag-badge" onclick="appendPrompt('q5_how_know_weak_topics', 'I usually only find out right before final exams')">⏰ Right before exams</button>
+            </div>
+          </div>
+
+          <div>
+            <textarea 
+              id="q5_how_know_weak_topics" 
+              name="q5_how_know_weak_topics" 
+              rows="4" 
+              placeholder="Share how you recognize which topics or chapters require more effort..."
+              class="custom-input custom-textarea"
+            ></textarea>
+          </div>
+        </section>
+
+        <!-- QUESTION 6: When you get low marks, do you understand why? -->
+        <section id="step-q6" class="step-slide">
+          <div class="mb-6">
+            <span class="text-xs font-bold uppercase tracking-wider text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-md">Question 6</span>
+            <h2 class="text-xl md:text-2xl font-bold text-gray-900 mt-2">
+              When you get low marks, do you understand why you got those marks? <span class="text-rose-500">*</span>
+            </h2>
+            <p class="text-sm text-gray-500 mt-1">Select the option that best reflects your experience.</p>
+          </div>
+
+          <div class="space-y-3 mb-4">
+            <div class="option-chip">
+              <input type="radio" id="q6-opt1" name="q6_understand_low_marks" value="Always" class="hidden" onchange="toggleQ6Other(false)">
+              <label for="q6-opt1" class="glass-pill flex items-center p-4 rounded-xl cursor-pointer font-medium text-sm gap-3">
+                <span class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center chip-icon font-bold">✓</span>
+                <div>
+                  <div class="font-bold text-gray-900">Always</div>
+                  <div class="text-xs text-gray-500">I clearly understand where and why I lost marks.</div>
+                </div>
+              </label>
+            </div>
+
+            <div class="option-chip">
+              <input type="radio" id="q6-opt2" name="q6_understand_low_marks" value="Sometimes" class="hidden" onchange="toggleQ6Other(false)">
+              <label for="q6-opt2" class="glass-pill flex items-center p-4 rounded-xl cursor-pointer font-medium text-sm gap-3">
+                <span class="w-8 h-8 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center chip-icon font-bold">~</span>
+                <div>
+                  <div class="font-bold text-gray-900">Sometimes</div>
+                  <div class="text-xs text-gray-500">I understand some mistakes, but other times I am confused why marks were cut.</div>
+                </div>
+              </label>
+            </div>
+
+            <div class="option-chip">
+              <input type="radio" id="q6-opt3" name="q6_understand_low_marks" value="Usually don’t know" class="hidden" onchange="toggleQ6Other(false)">
+              <label for="q6-opt3" class="glass-pill flex items-center p-4 rounded-xl cursor-pointer font-medium text-sm gap-3">
+                <span class="w-8 h-8 rounded-lg bg-rose-100 text-rose-700 flex items-center justify-center chip-icon font-bold">?</span>
+                <div>
+                  <div class="font-bold text-gray-900">Usually don’t know</div>
+                  <div class="text-xs text-gray-500">I rarely get an explanation and don't know what went wrong.</div>
+                </div>
+              </label>
+            </div>
+
+            <div class="option-chip">
+              <input type="radio" id="q6-opt4" name="q6_understand_low_marks" value="Other" class="hidden" onchange="toggleQ6Other(true)">
+              <label for="q6-opt4" class="glass-pill flex items-center p-4 rounded-xl cursor-pointer font-medium text-sm gap-3 border-indigo-200">
+                <span class="w-8 h-8 rounded-lg bg-purple-100 text-purple-700 flex items-center justify-center chip-icon"><i class="fa-solid fa-pen"></i></span>
+                <div>
+                  <div class="font-bold text-gray-900">Other / Something else</div>
+                  <div class="text-xs text-gray-500">Describe your own situation</div>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <!-- Dynamic Text Box for Q6 Other -->
+          <div id="q6-other-box" class="hidden p-4 rounded-2xl bg-indigo-50/70 border border-indigo-200">
+            <label class="block text-xs font-bold text-indigo-900 uppercase tracking-wider mb-2" for="q6_other_explanation">
+              Please explain your situation <span class="text-rose-500">*</span>
+            </label>
+            <input 
+              type="text" 
+              id="q6_other_explanation" 
+              name="q6_other_explanation" 
+              placeholder="e.g. Depends heavily on which teacher checks the paper..." 
+              class="custom-input"
+            >
+          </div>
+        </section>
+
+        <!-- QUESTION 7: Does your teacher tell you exactly what you need to improve? -->
+        <section id="step-q7" class="step-slide">
+          <div class="mb-6">
+            <span class="text-xs font-bold uppercase tracking-wider text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-md">Question 7</span>
+            <h2 class="text-xl md:text-2xl font-bold text-gray-900 mt-2">
+              Does your teacher tell you exactly what you need to improve? <span class="text-rose-500">*</span>
+            </h2>
+            <p class="text-sm text-gray-500 mt-1">Do you get actionable personalized guidance on your specific weak areas?</p>
+          </div>
+
+          <div class="mb-3">
+            <p class="text-xs font-semibold text-gray-500 mb-2">💡 Quick prompts:</p>
+            <div class="flex flex-wrap gap-2">
+              <button type="button" class="tag-badge" onclick="appendPrompt('q7_teacher_specific_feedback', 'Yes, my teacher explains specific mistakes and how to fix them.')">✅ Gives detailed guidance</button>
+              <button type="button" class="tag-badge" onclick="appendPrompt('q7_teacher_specific_feedback', 'Only gives generic advice like study harder or practice more.')">⚠️ Generic advice only</button>
+              <button type="button" class="tag-badge" onclick="appendPrompt('q7_teacher_specific_feedback', 'No, teachers usually just distribute marks without personalized feedback.')">❌ No personalized feedback</button>
+            </div>
+          </div>
+
+          <div>
+            <textarea 
+              id="q7_teacher_specific_feedback" 
+              name="q7_teacher_specific_feedback" 
+              rows="4" 
+              placeholder="Tell us what kind of feedback your teachers give you..."
+              class="custom-input custom-textarea"
+            ></textarea>
+          </div>
+        </section>
+
+        <!-- QUESTION 8: Do you get different homework/practice according to your level? -->
+        <section id="step-q8" class="step-slide">
+          <div class="mb-6">
+            <span class="text-xs font-bold uppercase tracking-wider text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-md">Question 8</span>
+            <h2 class="text-xl md:text-2xl font-bold text-gray-900 mt-2">
+              Do you get different homework/practice according to your level? <span class="text-rose-500">*</span>
+            </h2>
+            <p class="text-sm text-gray-500 mt-1">Does everyone get the exact same homework, or is it customized for your pace?</p>
+          </div>
+
+          <div class="mb-3">
+            <p class="text-xs font-semibold text-gray-500 mb-2">💡 Quick prompts:</p>
+            <div class="flex flex-wrap gap-2">
+              <button type="button" class="tag-badge" onclick="appendPrompt('q8_differentiated_homework', 'No, the entire class gets the exact same homework.')">📋 Same homework for everyone</button>
+              <button type="button" class="tag-badge" onclick="appendPrompt('q8_differentiated_homework', 'Sometimes students who struggle get extra simple practice questions.')">📈 Extra basic practice</button>
+              <button type="button" class="tag-badge" onclick="appendPrompt('q8_differentiated_homework', 'I wish we had questions tailored to our speed and level.')">🎯 Wish it was tailored</button>
+            </div>
+          </div>
+
+          <div>
+            <textarea 
+              id="q8_differentiated_homework" 
+              name="q8_differentiated_homework" 
+              rows="4" 
+              placeholder="Describe how homework and practice questions are assigned in your school or coaching..."
+              class="custom-input custom-textarea"
+            ></textarea>
+          </div>
+        </section>
+
+        <!-- QUESTION 9: What do you usually do one month before an exam? -->
+        <section id="step-q9" class="step-slide">
+          <div class="mb-6">
+            <span class="text-xs font-bold uppercase tracking-wider text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-md">Question 9</span>
+            <h2 class="text-xl md:text-2xl font-bold text-gray-900 mt-2">
+              What do you usually do one month before an exam? <span class="text-rose-500">*</span>
+            </h2>
+            <p class="text-sm text-gray-500 mt-1">Walk us through your routine, schedule, revision style, or cramming habits.</p>
+          </div>
+
+          <div class="mb-3">
+            <p class="text-xs font-semibold text-gray-500 mb-2">💡 Quick prompts:</p>
+            <div class="flex flex-wrap gap-2">
+              <button type="button" class="tag-badge" onclick="appendPrompt('q9_one_month_before_exam', 'Solve past 5-10 year question papers and sample papers.')">📄 Past year papers</button>
+              <button type="button" class="tag-badge" onclick="appendPrompt('q9_one_month_before_exam', 'Make a strict daily study timetable and revise notes.')">📅 Daily timetable</button>
+              <button type="button" class="tag-badge" onclick="appendPrompt('q9_one_month_before_exam', 'Start intense cramming and studying late nights.')">🌙 Late-night cramming</button>
+              <button type="button" class="tag-badge" onclick="appendPrompt('q9_one_month_before_exam', 'Watch one-shot marathon videos on YouTube.')">📺 YouTube One-shots</button>
+            </div>
+          </div>
+
+          <div>
+            <textarea 
+              id="q9_one_month_before_exam" 
+              name="q9_one_month_before_exam" 
+              rows="4" 
+              placeholder="What does your 1-month pre-exam preparation look like?..."
+              class="custom-input custom-textarea"
+            ></textarea>
+          </div>
+        </section>
+
+        <!-- QUESTION 10: What do you wish your teacher could do differently to help you learn better? -->
+        <section id="step-q10" class="step-slide">
+          <div class="mb-6">
+            <span class="text-xs font-bold uppercase tracking-wider text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-md">Question 10</span>
+            <h2 class="text-xl md:text-2xl font-bold text-gray-900 mt-2">
+              What do you wish your teacher could do differently to help you learn better? <span class="text-rose-500">*</span>
+            </h2>
+            <p class="text-sm text-gray-500 mt-1">If you could redesign how your classes are taught, what would you ask for?</p>
+          </div>
+
+          <div class="mb-3">
+            <p class="text-xs font-semibold text-gray-500 mb-2">💡 Quick prompts:</p>
+            <div class="flex flex-wrap gap-2">
+              <button type="button" class="tag-badge" onclick="appendPrompt('q10_teacher_improvement_wishlist', 'Use more practical, real-life examples and visuals instead of just reading textbooks.')">🎨 Real-life examples & visuals</button>
+              <button type="button" class="tag-badge" onclick="appendPrompt('q10_teacher_improvement_wishlist', 'Be more approachable for doubts without getting angry or judging.')">🤝 Judgment-free doubt clearing</button>
+              <button type="button" class="tag-badge" onclick="appendPrompt('q10_teacher_improvement_wishlist', 'Slow down the pace and ensure everyone understands before rushing ahead.')">🐢 Slower, clearer pace</button>
+              <button type="button" class="tag-badge" onclick="appendPrompt('q10_teacher_improvement_wishlist', 'Provide summary notes and formula cheat sheets.')">📑 Cheat sheets & summaries</button>
+            </div>
+          </div>
+
+          <div>
+            <textarea 
+              id="q10_teacher_improvement_wishlist" 
+              name="q10_teacher_improvement_wishlist" 
+              rows="4" 
+              placeholder="Speak openly — what teaching style or support would truly help you succeed?..."
+              class="custom-input custom-textarea"
+            ></textarea>
+          </div>
+        </section>
+
+        <!-- QUESTION 11: Diagnostic App Receptiveness -->
+        <section id="step-q11" class="step-slide">
+          <div class="mb-6">
+            <span class="text-xs font-bold uppercase tracking-wider text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-md">Question 11</span>
+            <h2 class="text-xl md:text-2xl font-bold text-gray-900 mt-2">
+              If an app could tell you exactly which topics you are weak in and give you questions to improve them, would you use it? Why? <span class="text-rose-500">*</span>
+            </h2>
+            <p class="text-sm text-gray-500 mt-1">Imagine an AI/Smart study buddy that maps your exact knowledge gaps.</p>
+          </div>
+
+          <!-- Quick Reaction Buttons -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
+            <div class="option-chip">
+              <input type="radio" id="q11-yes" name="q11_ai_diagnostic_app_interest" value="Definitely Yes!" class="hidden">
+              <label for="q11-yes" class="glass-pill flex flex-col items-center justify-center p-4 rounded-2xl cursor-pointer text-center gap-1.5">
+                <span class="text-2xl">🚀</span>
+                <span class="font-bold text-sm">Definitely Yes!</span>
+                <span class="text-[11px] text-gray-500">I would love this!</span>
+              </label>
+            </div>
+
+            <div class="option-chip">
+              <input type="radio" id="q11-maybe" name="q11_ai_diagnostic_app_interest" value="Maybe / Depends" class="hidden">
+              <label for="q11-maybe" class="glass-pill flex flex-col items-center justify-center p-4 rounded-2xl cursor-pointer text-center gap-1.5">
+                <span class="text-2xl">🤔</span>
+                <span class="font-bold text-sm">Maybe / Depends</span>
+                <span class="text-[11px] text-gray-500">Depends on features</span>
+              </label>
+            </div>
+
+            <div class="option-chip">
+              <input type="radio" id="q11-no" name="q11_ai_diagnostic_app_interest" value="No / Not Interested" class="hidden">
+              <label for="q11-no" class="glass-pill flex flex-col items-center justify-center p-4 rounded-2xl cursor-pointer text-center gap-1.5">
+                <span class="text-2xl">❌</span>
+                <span class="font-bold text-sm">No / Wouldn't Use</span>
+                <span class="text-[11px] text-gray-500">Prefer other methods</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Why textarea -->
+          <div class="mt-4">
+            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2" for="q11_why_interest">
+              Why would you use it (or not use it)? What features would matter to you? <span class="text-rose-500">*</span>
+            </label>
+            <textarea 
+              id="q11_why_interest" 
+              name="q11_why_interest" 
+              rows="3" 
+              placeholder="e.g. It would save me hours of guessing what to study, give me instant feedback, and reduce my exam stress..."
+              class="custom-input custom-textarea"
+            ></textarea>
+          </div>
+        </section>
+
+        <!-- WIZARD NAVIGATION BUTTONS -->
+        <div id="wizard-navigation" class="hidden flex justify-between items-center pt-6 mt-6 border-t border-gray-100">
+          <button 
+            type="button" 
+            id="btn-prev" 
+            onclick="prevStep()" 
+            class="py-3 px-5 rounded-xl font-bold text-sm text-gray-600 hover:text-gray-900 bg-gray-100 hover:bg-gray-200 transition flex items-center gap-2"
+          >
+            <i class="fa-solid fa-arrow-left text-xs"></i> Back
+          </button>
+
+          <button 
+            type="button" 
+            id="btn-next" 
+            onclick="nextStep()" 
+            class="py-3 px-7 rounded-xl font-bold text-sm text-white bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 shadow-md shadow-indigo-200 hover:shadow-indigo-300 transition flex items-center gap-2"
+          >
+            Next <i class="fa-solid fa-arrow-right text-xs"></i>
+          </button>
+
+          <button 
+            type="submit" 
+            id="btn-submit" 
+            class="hidden py-3.5 px-8 rounded-xl font-bold text-sm text-white bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 shadow-lg shadow-emerald-200 hover:shadow-emerald-300 transition flex items-center gap-2 transform hover:-translate-y-0.5"
+          >
+            Submit Responses <i class="fa-solid fa-paper-plane text-xs"></i>
+          </button>
+        </div>
+
+      </form>
+
+      <!-- SCREEN 12: CELEBRATION / THANK YOU SCREEN -->
+      <section id="step-thankyou" class="step-slide text-center py-6">
+        <div class="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-3xl flex items-center justify-center text-4xl mx-auto mb-6 shadow-inner animate-bounce">
+          🎉
+        </div>
+        <h2 class="text-2xl md:text-3xl font-extrabold text-gray-900 tracking-tight">
+          Thank You, <span id="thankyou-name" class="text-indigo-600">Student</span>!
+        </h2>
+        <p class="text-base text-gray-600 max-w-md mx-auto mt-3 leading-relaxed">
+          Your responses have been recorded safely. Your honest thoughts will help design better learning tools and study support for students like you!
+        </p>
+
+        <div class="mt-8 p-4 bg-indigo-50/60 rounded-2xl max-w-md mx-auto border border-indigo-100 text-xs text-indigo-900 flex items-center justify-center gap-2">
+          <i class="fa-solid fa-circle-check text-emerald-500 text-base"></i>
+          <span>Submission ID: <code id="submission-id" class="font-mono font-bold bg-white px-2 py-0.5 rounded border">SUB-001</code></span>
+        </div>
+
+        <div class="mt-8">
+          <button 
+            type="button" 
+            onclick="restartSurvey()" 
+            class="py-3 px-6 rounded-xl font-semibold text-xs text-gray-500 hover:text-gray-800 bg-gray-100 hover:bg-gray-200 transition"
+          >
+            Submit another response
+          </button>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- Bottom Footer Note -->
+    <div class="text-center mt-6 text-xs text-gray-600 flex justify-center items-center gap-4">
+      <span>Built for Student Learning Research</span>
+      <span>•</span>
+      <a href="/admin" target="_blank" class="text-indigo-600 hover:underline font-medium flex items-center gap-1">
+        <i class="fa-solid fa-lock text-[10px]"></i> Researcher Admin
+      </a>
+    </div>
+
+  </main>
+
+  <script src="/static/js/survey.js"></script>
+</body>
+</html>

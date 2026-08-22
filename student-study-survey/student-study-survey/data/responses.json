@@ -1,0 +1,31 @@
+[
+  {
+    "id": "78accc9f",
+    "timestamp": "2026-08-22 15:40:00",
+    "student_name": "Ananya Gupta",
+    "student_email": "ananya.gupta@example.com",
+    "q1_class": "Class 10",
+    "q1_class_other": "",
+    "q2_difficult_subjects": [
+      "Mathematics",
+      "Science"
+    ],
+    "q2_subject_other": "",
+    "q2_why_difficult": "Trigonometry proofs and chemistry chemical balancing formulas take too long to solve.",
+    "q3_biggest_study_problem": "Feeling sleepy after school and getting distracted by Instagram reels.",
+    "q4_when_dont_understand": [
+      "Watch YouTube",
+      "Search on Google/AI"
+    ],
+    "q4_other_action": "",
+    "q5_how_know_weak_topics": "When I make careless mistakes in mock test questions.",
+    "q6_understand_low_marks": "Always",
+    "q6_other_explanation": "",
+    "q7_teacher_specific_feedback": "Teacher writes corrections on answer sheet clearly.",
+    "q8_differentiated_homework": "No, whole batch receives identical worksheets.",
+    "q9_one_month_before_exam": "Review notes daily and solve sample question papers with a timer.",
+    "q10_teacher_improvement_wishlist": "Explain formulas with visual simulations.",
+    "q11_ai_diagnostic_app_interest": "Definitely Yes!",
+    "q11_why_interest": "It will tell me exactly what to practice so I can target my weak chapters faster."
+  }
+]

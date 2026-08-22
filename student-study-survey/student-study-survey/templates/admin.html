@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Researcher Admin Portal - Student Study Insights</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col justify-between">
+
+  <!-- AUTHENTICATION MODAL (If not logged in) -->
+  <div id="auth-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-md p-4">
+    <div class="glass-card bg-slate-900/95 border-slate-700 text-slate-100 rounded-3xl p-8 max-w-md w-full shadow-2xl relative">
+      <div class="w-12 h-12 rounded-2xl bg-indigo-600/20 border border-indigo-500/40 text-indigo-400 flex items-center justify-center text-2xl mx-auto mb-4">
+        <i class="fa-solid fa-shield-halved"></i>
+      </div>
+      <h2 class="text-2xl font-bold text-center text-white">Researcher Access</h2>
+      <p class="text-xs text-slate-400 text-center mt-1 mb-6">Enter your researcher passcode to view private student survey records.</p>
+      
+      <form onsubmit="handleAdminLogin(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">Passcode</label>
+          <input 
+            type="password" 
+            id="admin-passcode-input" 
+            required 
+            placeholder="Enter passcode" 
+            class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500"
+          >
+        </div>
+        <button 
+          type="submit" 
+          id="btn-login-submit"
+          class="w-full py-3.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl shadow-lg shadow-indigo-600/30 transition flex items-center justify-center gap-2"
+        >
+          <i class="fa-solid fa-unlock text-xs"></i> Unlock Dashboard
+        </button>
+        <p id="auth-error-msg" class="hidden text-xs text-rose-400 text-center font-medium mt-2">Incorrect passcode. Please try again.</p>
+      </form>
+      <div class="text-center mt-4">
+        <a href="/" class="text-xs text-slate-400 hover:text-slate-200">← Back to Student Survey</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- DASHBOARD WRAPPER -->
+  <div id="dashboard-wrapper" class="hidden flex-grow p-4 md:p-8 max-w-7xl mx-auto w-full">
+
+    <!-- Top Admin Header -->
+    <header class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-800/80 border border-slate-700/80 rounded-2xl p-5 mb-8 backdrop-blur-md">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center text-lg shadow-md shadow-indigo-600/30">
+          <i class="fa-solid fa-chart-pie"></i>
+        </div>
+        <div>
+          <h1 class="font-extrabold text-white text-xl">Student Insights Dashboard</h1>
+          <p class="text-xs text-indigo-400 font-medium">UX Research & Learning Analytics</p>
+        </div>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-2.5">
+        <button onclick="loadDashboardData()" class="px-3.5 py-2 rounded-xl bg-slate-700/70 hover:bg-slate-700 border border-slate-600 text-slate-200 text-xs font-semibold flex items-center gap-2 transition">
+          <i class="fa-solid fa-rotate text-[11px]"></i> Refresh
+        </button>
+
+        <a id="btn-export-excel" href="/api/admin/export/excel" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold flex items-center gap-2 shadow-md shadow-emerald-600/20 transition">
+          <i class="fa-solid fa-file-excel"></i> Export Excel (Portrait & Large Font)
+        </a>
+
+        <a id="btn-print-portrait" href="/api/admin/print/portrait" target="_blank" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold flex items-center gap-2 shadow-md shadow-indigo-600/20 transition">
+          <i class="fa-solid fa-print"></i> Print / PDF (Portrait)
+        </a>
+
+        <a id="btn-export-csv" href="/api/admin/export/csv" class="px-3 py-2 rounded-xl bg-slate-700 hover:bg-slate-600 border border-slate-600 text-slate-200 text-xs font-medium flex items-center gap-1.5 transition">
+          <i class="fa-solid fa-file-csv"></i> CSV
+        </a>
+
+        <a id="btn-export-json" href="/api/admin/export/json" class="px-3 py-2 rounded-xl bg-slate-700 hover:bg-slate-600 border border-slate-600 text-slate-200 text-xs font-medium flex items-center gap-1.5 transition">
+          <i class="fa-solid fa-file-code"></i> JSON
+        </a>
+
+        <button onclick="handleAdminLogout()" class="px-3.5 py-2 rounded-xl bg-rose-600/20 hover:bg-rose-600/30 border border-rose-500/30 text-rose-300 text-xs font-semibold flex items-center gap-2 transition">
+          <i class="fa-solid fa-arrow-right-from-bracket text-[11px]"></i> Exit
+        </button>
+      </div>
+    </header>
+
+    <!-- KPI Metric Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      <!-- Total Responses -->
+      <div class="bg-slate-800/80 border border-slate-700/80 rounded-2xl p-5 relative overflow-hidden">
+        <div class="flex justify-between items-start">
+          <div>
+            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Total Submissions</p>
+            <h3 id="stat-total" class="text-3xl font-extrabold text-white mt-1">0</h3>
+          </div>
+          <span class="p-2.5 rounded-xl bg-indigo-600/20 text-indigo-400 text-lg"><i class="fa-solid fa-users"></i></span>
+        </div>
+        <p class="text-[11px] text-slate-400 mt-3">Live verified student responses</p>
+      </div>
+
+      <!-- Top Difficult Subject -->
+      <div class="bg-slate-800/80 border border-slate-700/80 rounded-2xl p-5 relative overflow-hidden">
+        <div class="flex justify-between items-start">
+          <div>
+            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Most Difficult Subject</p>
+            <h3 id="stat-top-subject" class="text-xl font-extrabold text-amber-400 mt-1 truncate max-w-[170px]">-</h3>
+          </div>
+          <span class="p-2.5 rounded-xl bg-amber-500/20 text-amber-400 text-lg"><i class="fa-solid fa-triangle-exclamation"></i></span>
+        </div>
+        <p id="stat-top-subject-count" class="text-[11px] text-slate-400 mt-3">0 mentions</p>
+      </div>
+
+      <!-- Top Doubt Channel -->
+      <div class="bg-slate-800/80 border border-slate-700/80 rounded-2xl p-5 relative overflow-hidden">
+        <div class="flex justify-between items-start">
+          <div>
+            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Top Doubt Channel</p>
+            <h3 id="stat-top-doubt" class="text-xl font-extrabold text-sky-400 mt-1 truncate max-w-[170px]">-</h3>
+          </div>
+          <span class="p-2.5 rounded-xl bg-sky-500/20 text-sky-400 text-lg"><i class="fa-solid fa-lightbulb"></i></span>
+        </div>
+        <p id="stat-top-doubt-count" class="text-[11px] text-slate-400 mt-3">Preferred doubt method</p>
+      </div>
+
+      <!-- Diagnostic App Interest -->
+      <div class="bg-slate-800/80 border border-slate-700/80 rounded-2xl p-5 relative overflow-hidden">
+        <div class="flex justify-between items-start">
+          <div>
+            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">App Interest (Yes/Maybe)</p>
+            <h3 id="stat-app-interest" class="text-3xl font-extrabold text-emerald-400 mt-1">0%</h3>
+          </div>
+          <span class="p-2.5 rounded-xl bg-emerald-500/20 text-emerald-400 text-lg"><i class="fa-solid fa-rocket"></i></span>
+        </div>
+        <p class="text-[11px] text-slate-400 mt-3">Receptive to AI diagnostic tool</p>
+      </div>
+    </div>
+
+    <!-- Analytics Breakdown Visuals -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+      
+      <!-- Class Breakdown -->
+      <div class="bg-slate-800/80 border border-slate-700/80 rounded-2xl p-5">
+        <h4 class="font-bold text-sm text-white flex items-center gap-2 mb-4">
+          <i class="fa-solid fa-graduation-cap text-indigo-400"></i> Grade / Class Distribution
+        </h4>
+        <div id="chart-classes" class="space-y-3">
+          <p class="text-xs text-slate-500">No data recorded yet.</p>
+        </div>
+      </div>
+
+      <!-- Subject Difficulty Breakdown -->
+      <div class="bg-slate-800/80 border border-slate-700/80 rounded-2xl p-5">
+        <h4 class="font-bold text-sm text-white flex items-center gap-2 mb-4">
+          <i class="fa-solid fa-book-open text-amber-400"></i> Difficult Subjects Breakdown
+        </h4>
+        <div id="chart-subjects" class="space-y-3">
+          <p class="text-xs text-slate-500">No data recorded yet.</p>
+        </div>
+      </div>
+
+      <!-- Doubt Resolving Habits -->
+      <div class="bg-slate-800/80 border border-slate-700/80 rounded-2xl p-5">
+        <h4 class="font-bold text-sm text-white flex items-center gap-2 mb-4">
+          <i class="fa-solid fa-circle-question text-sky-400"></i> Doubt Solving Behavior
+        </h4>
+        <div id="chart-doubts" class="space-y-3">
+          <p class="text-xs text-slate-500">No data recorded yet.</p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RESPONSES DATA TABLE -->
+    <div class="bg-slate-800/80 border border-slate-700/80 rounded-2xl p-6 shadow-xl">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+        <div>
+          <h3 class="text-lg font-bold text-white">Student Response Records</h3>
+          <p class="text-xs text-slate-400">Click any student record to view full 11-question response details.</p>
+        </div>
+
+        <!-- Filters & Search -->
+        <div class="flex flex-wrap items-center gap-3">
+          <div class="relative">
+            <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-slate-500 text-xs"></i>
+            <input 
+              type="text" 
+              id="table-search" 
+              oninput="filterResponsesTable()" 
+              placeholder="Search name, email, keyword..." 
+              class="bg-slate-900 border border-slate-700 rounded-xl pl-9 pr-4 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 w-56 md:w-64"
+            >
+          </div>
+
+          <select 
+            id="filter-class" 
+            onchange="filterResponsesTable()" 
+            class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-300 focus:outline-none focus:border-indigo-500"
+          >
+            <option value="">All Classes</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Table Container -->
+      <div class="overflow-x-auto rounded-xl border border-slate-700/60">
+        <table class="w-full text-left text-xs">
+          <thead class="bg-slate-900 text-slate-400 uppercase tracking-wider font-semibold border-b border-slate-700">
+            <tr>
+              <th class="p-3.5">Student</th>
+              <th class="p-3.5">Class</th>
+              <th class="p-3.5">Difficult Subject(s)</th>
+              <th class="p-3.5">Biggest Problem</th>
+              <th class="p-3.5">App Interest</th>
+              <th class="p-3.5">Time</th>
+              <th class="p-3.5 text-right">Action</th>
+            </tr>
+          </thead>
+          <tbody id="responses-table-body" class="divide-y divide-slate-700/60 text-slate-200">
+            <tr>
+              <td colspan="7" class="p-6 text-center text-slate-500">Loading student records...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div id="table-empty-msg" class="hidden text-center py-8 text-slate-500 text-xs">
+        No responses match your search or filter criteria.
+      </div>
+    </div>
+
+  </div>
+
+  <!-- DETAILS MODAL -->
+  <div id="detail-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-md p-4">
+    <div class="glass-card bg-slate-900 border-slate-700 text-slate-100 rounded-3xl p-6 md:p-8 max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-2xl relative">
+      <div class="flex justify-between items-start border-b border-slate-800 pb-4 mb-6">
+        <div>
+          <span class="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded bg-indigo-900 text-indigo-300">Student Response Detail</span>
+          <h2 id="modal-student-name" class="text-2xl font-bold text-white mt-1">Student Name</h2>
+          <p id="modal-student-meta" class="text-xs text-slate-400">email@example.com • Class 10 • Submitted: 2026-08-21 20:00</p>
+        </div>
+        <button onclick="closeDetailModal()" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center transition">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+      </div>
+
+      <div id="modal-content" class="space-y-4">
+        <!-- Injected via JavaScript -->
+      </div>
+
+      <div class="mt-8 pt-4 border-t border-slate-800 flex justify-end">
+        <button onclick="closeDetailModal()" class="px-5 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-semibold transition">
+          Close Window
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="text-center py-6 text-xs text-slate-500 border-t border-slate-800">
+    Researcher Portal • Safe & Encrypted Local Storage
+  </footer>
+
+  <script src="/static/js/admin.js"></script>
+</body>
+</html>
